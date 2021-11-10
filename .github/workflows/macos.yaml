@@ -1,0 +1,21 @@
+name: macOS
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: macos-11
+    strategy:
+      fail-fast: false
+    steps:
+    - name: Checkout pstools
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        brew upgrade
+        brew install make zlib
+    - name: Compile
+      run:  make
+    - name: Test
+      run: |
+        ./pstools 2>&1 | grep Usage

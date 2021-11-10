@@ -21,13 +21,15 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update -q || :
-        sudo apt install -q -y make ${{ matrix.entry.compiler }} zlib1g-dev
+        sudo apt install -q -y make ${{ matrix.entry.compiler }} zlib1g-dev libminimap2-dev
     - name: Set ENV CXX=${{ matrix.entry.compiler }}
       run: |
         echo "CXX='${{ matrix.entry.compiler }}'" >> $GITHUB_ENV
+    - name: Remove .a files.
+      run: rm -f *.a
     - name: Compile
       # To see the acutal commands
-      run:  make VERBOSE=1
+      run:  make VERBOSE=1 LIBS="-lm -lz -lpthread"
     - name: Test
       run: |
         ./pstools 2>&1 | grep Usage
